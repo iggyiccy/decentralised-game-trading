@@ -1,5 +1,7 @@
 # blockchain-developer-bootcamp-final-project
 
+![](https://media.giphy.com/media/Kbc5SZgO7re8/giphy.gif?cid=ecf05e47echpb4flagcplv8fnpqpps3tv6c0ogmsdzwvlnx3&rid=giphy.gif&ct=g)
+
 ## Unique NFT Generator with Machine Learning
 
 This is one of the idea I have in mind. This Dapp will have simple UI elements: login with Metamask, login without Using other wallet provider, an introduction page, guide on minting, NFT owner socials, NFT lookup etc.
