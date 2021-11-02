@@ -1,6 +1,6 @@
 # blockchain-developer-bootcamp-final-project
 
-![](https://media.giphy.com/media/TL0oXBlykdF7ekXI9w/source.mov)
+![](https://media.giphy.com/media/TL0oXBlykdF7ekXI9w/giphy.gif)
 
 ## Decentralised Game Trading Marketplace
 
