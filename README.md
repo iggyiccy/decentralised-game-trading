@@ -1,25 +1,20 @@
 # blockchain-developer-bootcamp-final-project
 
-![](https://media.giphy.com/media/Kbc5SZgO7re8/giphy.gif?cid=ecf05e47echpb4flagcplv8fnpqpps3tv6c0ogmsdzwvlnx3&rid=giphy.gif&ct=g)
+![](https://media.giphy.com/media/TL0oXBlykdF7ekXI9w/source.mov)
 
-## Unique NFT Generator with Machine Learning
+## Decentralised Game Trading Marketplace
 
-This is one of the idea I have in mind. This Dapp will have simple UI elements: login with Metamask, login without Using other wallet provider, an introduction page, guide on minting, NFT owner socials, NFT lookup etc.
+I recently bought a Nintendo Switch game console and found that it is a common
+struggle for console owners to buy and sell pre-owned games. This project aims
+to provide a decentralised solution for the game trading space.
 
-Key element is a personality test with around 10 questions, and also ask for DOB.
+Features:
 
-- 10 Questions: To determine personality
-- DOB: To determine user's zodiac
-
-Using these information provided by the user, program will determine user's personality and generate a NFT for minting. NFT already pre-minted when user start the personality test and can't be reverse once test submitted.
-
-Nature about this NFT:
-
-- unique looking
-- limited
-- astrology element
-- customisatable
-- specifications available to all
-- love pairing (social element)
-- backed by machine learning & research studies
-- private answering
+- Smart contract lock-in deposit for shipping related trade
+- Smart contract lock-in deposit for F2F trading
+- Smart contract for local business owners to register become a trading site
+- Smart contract to rate selling and buyer
+- Use Chainlink Oracle to fetch information from Australia Post shipping details
+- Use Chainlink Oracle to fetch Nintendo game price and details
+- Organise F2F meetup
+- Decentralised chat feature using Status
