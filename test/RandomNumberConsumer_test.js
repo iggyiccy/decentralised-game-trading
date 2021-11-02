@@ -1,36 +1,31 @@
-const { assert } = require('chai')
+
+const { expect } = require("chai")
 const { expectRevert } = require('@openzeppelin/test-helpers')
 
-contract('RandomNumberConsumer', accounts => {
-    const RandomNumberConsumer = artifacts.require('RandomNumberConsumer')
-    const VRFCoordinatorMock = artifacts.require('VRFCoordinatorMock')
-    const { LinkToken } = require('@chainlink/contracts/truffle/v0.4/LinkToken')
-    const defaultAccount = accounts[0]
-    let randomNumberConsumer, vrfCoordinatorMock, link, keyhash, fee
-
-    describe('#request random number', () => {
-        beforeEach(async () => {
-            keyhash = '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4'
-            fee = '1000000000000000000'
-            link = await LinkToken.new({ from: defaultAccount })
-            vrfCoordinatorMock = await VRFCoordinatorMock.new(link.address, { from: defaultAccount })
-            randomNumberConsumer = await RandomNumberConsumer.new(link.address, keyhash, vrfCoordinatorMock.address, fee, { from: defaultAccount })
-        })
-        it('it revert without LINK', async () => {
-            await expectRevert.unspecified(
-                randomNumberConsumer.getRandomNumber({ from: defaultAccount })
-            )
-        })
-        it('returns a random number with link', async () => {
-            await link.transfer(randomNumberConsumer.address, web3.utils.toWei('1', 'ether'), { from: defaultAccount })
-            let transaction = await randomNumberConsumer.getRandomNumber({ from: defaultAccount })
-            assert.exists(transaction.receipt.rawLogs)
-            // This is the event that is emitted
-            let requestId = transaction.receipt.rawLogs[3].topics[0]
-            // let requestId = await randomNumberConsumer.lastRequestId({ from: defaultAccount })
-            await vrfCoordinatorMock.callBackWithRandomness(requestId, '777', randomNumberConsumer.address, { from: defaultAccount })
-            let randomNumber = await randomNumberConsumer.randomResult({ from: defaultAccount })
-            assert.equal(randomNumber, 777)
-        })
-    })
+describe("RandomNumberConsumer", async function () {
+  let randomNumberConsumer, vrfCoordinatorMock, seed, link, keyhash, fee
+  beforeEach(async () => {
+    const MockLink = await ethers.getContractFactory("MockLink")
+    const RandomNumberConsumer = await ethers.getContractFactory("RandomNumberConsumer")
+    const VRFCoordinatorMock = await ethers.getContractFactory("VRFCoordinatorMock")
+    keyhash = '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4'
+    fee = '1000000000000000000'
+    seed = 123
+    link = await MockLink.deploy()
+    vrfCoordinatorMock = await VRFCoordinatorMock.deploy(link.address)
+    randomNumberConsumer = await RandomNumberConsumer.deploy(vrfCoordinatorMock.address, link.address, keyhash, fee)
+  })
+  it("Random Number Should successfully make an external random number request", async () => {
+    //Before we can do an API request, we need to fund it with LINK
+    // await hre.run("fund-link", { contract: randomNumberConsumer.address, linkAddress: link.address })
+    await link.transfer(randomNumberConsumer.address, '2000000000000000000')
+    let transaction = await randomNumberConsumer.getRandomNumber(seed)
+    let tx_receipt = await transaction.wait()
+    let requestId = tx_receipt.events[2].topics[0]
+    //Test the result of the random number request
+    let tx = await vrfCoordinatorMock.callBackWithRandomness(requestId, '777', randomNumberConsumer.address)
+    let randomNumber = await randomNumberConsumer.randomResult()
+    console.log("Random Number: ", randomNumber)
+    expect(randomNumber).to.equal(777)
+  })
 })

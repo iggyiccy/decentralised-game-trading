@@ -1,8 +1,7 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.6.6;
+
+pragma solidity 0.6.6;
 
 import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
-
 contract RandomNumberConsumer is VRFConsumerBase {
     
     bytes32 internal keyHash;
@@ -18,37 +17,41 @@ contract RandomNumberConsumer is VRFConsumerBase {
      * LINK token address:                0xa36085F69e2889c224210F603D836748e7dC0088
      * Key Hash: 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
      */
-    constructor(address _linkTokenAddress, bytes32 _keyHash, 
-    address _vrfCoordinatorAddress, uint256 _fee)
-        public
+    constructor(address _vrfCoordinator,
+                address _link,
+                bytes32 _keyHash,
+                uint _fee) 
         VRFConsumerBase(
-            _vrfCoordinatorAddress, // VRF Coordinator
-            _linkTokenAddress  // LINK Token
-        )
+            _vrfCoordinator, // VRF Coordinator
+            _link  // LINK Token
+        ) public
     {
         keyHash = _keyHash;
-        fee = _fee;
+        fee = _fee; 
     }
     
     /** 
      * Requests randomness from a user-provided seed
      */
-    function getRandomNumber() public returns (bytes32 requestId) {
-        requestId = requestRandomness(keyHash, fee);
+    function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
+        requestId = requestRandomness(keyHash, fee, userProvidedSeed);
         emit RequestedRandomness(requestId);
-    }
-
-    /** 
-     * Requests the address of the Chainlink Token on this network 
-     */
-    function getChainlinkToken() public view returns (address) {
-        return address(LINK);
     }
 
     /**
      * Callback function used by VRF Coordinator
      */
-    function fulfillRandomness(bytes32 /* requestId */, uint256 randomness) internal override {
+    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
         randomResult = randomness;
+    }
+    
+    /**
+     * Withdraw LINK from this contract
+     * 
+     * DO NOT USE THIS IN PRODUCTION AS IT CAN BE CALLED BY ANY ADDRESS.
+     * THIS IS PURELY FOR EXAMPLE PURPOSES.
+     */
+    function withdrawLink() external {
+        require(LINK.transfer(msg.sender, LINK.balanceOf(address(this))), "Unable to transfer");
     }
 }

@@ -1,16 +1,25 @@
-// SPDX-License-Identifier: MIT
+/** This example code is designed to quickly deploy an example contract using Remix.
+ *  If you have never used Remix, try our example walkthrough: https://docs.chain.link/docs/example-walkthrough
+ *  You will need testnet ETH and LINK.
+ *     - Kovan ETH faucet: https://faucet.kovan.network/
+ *     - Kovan LINK faucet: https://kovan.chain.link/
+ */
+
 pragma solidity ^0.6.6;
 
+//import "https://raw.githubusercontent.com/smartcontractkit/chainlink/develop/evm-contracts/src/v0.6/ChainlinkClient.sol";
 import "@chainlink/contracts/src/v0.6/ChainlinkClient.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+
+
 /**
- * @title MyContract is an example contract which requests data from
+ * @title APIConsumer is an example contract which requests data from
  * the Chainlink network
  * @dev This contract is designed to work on multiple networks, including
  * local test networks
  */
-contract MyContract is ChainlinkClient, Ownable {
+contract APIConsumer is ChainlinkClient, Ownable {
   uint256 public data;
 
   /**
