@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@douyinfe/semi-icons": "^2.0.3",
     "@douyinfe/semi-ui": "^2.0.3",
     "react": "16.11.0",
     "react-dom": "16.11.0",

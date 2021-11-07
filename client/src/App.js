@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import getWeb3 from "./getWeb3";
+import React, { Component, useState } from "react";
 import { Typography } from "@douyinfe/semi-ui";
 import {
   Layout,
@@ -12,7 +10,6 @@ import {
 } from "@douyinfe/semi-ui";
 import {
   IconSemiLogo,
-  IconBell,
   IconGithubLogo,
   IconHome,
   IconSearch,
@@ -20,57 +17,13 @@ import {
   IconBookmark,
 } from "@douyinfe/semi-icons";
 import Info from "./components/Info";
-
+import Notification from "./components/Notification";
+import Announcement from "./components/Announcement";
 import "./App.css";
+import Homepage from "./components/Homepage";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
-
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
-      console.error(error);
-    }
-  };
-
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Stores a given value, 5 by default.
-    await contract.methods.set(10).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
   render() {
-    // if (!this.state.web3) {
-    //   return <div>Loading Web3, accounts, and contract...</div>;
-    // }
     const { Header, Footer, Sider, Content } = Layout;
     const { Text } = Typography;
     return (
@@ -94,18 +47,11 @@ class App extends Component {
                       fontWeight: "600",
                     }}
                   >
-                    DeGame Australia
+                    DeGame
                   </span>
                 </span>
                 <Nav.Footer>
-                  <Button
-                    theme="borderless"
-                    icon={<IconBell size="large" />}
-                    style={{
-                      color: "var(--semi-color-text-2)",
-                      marginRight: "12px",
-                    }}
-                  />
+                  <Notification />
                   <Info />
                   <Avatar color="orange" size="small">
                     YJ
@@ -117,7 +63,7 @@ class App extends Component {
           <Layout>
             <Sider style={{ backgroundColor: "var(--semi-color-bg-1)" }}>
               <Nav
-                style={{ maxWidth: 150, height: "100%" }}
+                style={{ maxWidth: 130, height: "100%" }}
                 defaultSelectedKeys={["Home"]}
                 defaultIsCollapsed={true}
                 items={[
@@ -137,8 +83,8 @@ class App extends Component {
                     icon: <IconBookmark size="large" />,
                   },
                   {
-                    itemKey: "Chat",
-                    text: "Chat",
+                    itemKey: "Inbox",
+                    text: "Inbox",
                     icon: <IconInbox size="large" />,
                   },
                 ]}
@@ -150,24 +96,30 @@ class App extends Component {
             </Sider>
             <Content
               style={{
-                padding: "24px",
+                padding: "16px",
                 backgroundColor: "var(--semi-color-bg-0)",
               }}
             >
               <Breadcrumb
+                compact={true}
                 style={{
-                  marginBottom: "24px",
+                  marginBottom: "16px",
                 }}
-                routes={["Home", "Page Section", "Ppage Ssection", "Detail"]}
-              />
+              >
+                <Breadcrumb.Item icon={<IconHome />}></Breadcrumb.Item>
+                <Breadcrumb.Item>Nintendo Switch</Breadcrumb.Item>
+                <Breadcrumb.Item>Latest Game Listing</Breadcrumb.Item>
+              </Breadcrumb>
               <div
                 style={{
                   borderRadius: "10px",
                   border: "1px solid var(--semi-color-border)",
-                  height: "376px",
-                  padding: "32px",
+                  padding: "16px",
                 }}
               >
+                <Announcement />
+                <Homepage />
+                <br />
                 <Skeleton
                   placeholder={<Skeleton.Paragraph rows={2} />}
                   loading={true}
