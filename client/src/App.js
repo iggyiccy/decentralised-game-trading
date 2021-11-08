@@ -21,6 +21,7 @@ import Notification from "./components/Notification";
 import Announcement from "./components/Announcement";
 import "./App.css";
 import Homepage from "./components/Homepage";
+import Catalogue from "./components/Catalogue";
 
 class App extends Component {
   render() {
@@ -118,6 +119,7 @@ class App extends Component {
                 }}
               >
                 <Announcement />
+                <Catalogue />
                 <Homepage />
                 <br />
                 <Skeleton
@@ -154,7 +156,7 @@ class App extends Component {
                 <Button
                   onClick={() => {
                     window.open(
-                      "https://github.com/iggyiccy/blockchain-developer-bootcamp-final-project"
+                      "https://github.com/iggyiccy/decentralised-game-trading"
                     );
                   }}
                   theme="borderless"
