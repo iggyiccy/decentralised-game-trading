@@ -20,6 +20,15 @@ Features:
 - Organise F2F meetup
 - Decentralised chat feature using Status
 
+# External APIs used 
+- https://github.com/ZekeSnider/NintendoSwitchRESTAPI 
+- Get switch's game list https://github.com/ZekeSnider/NintendoSwitchRESTAPI/blob/master/SwitchBlueprint.md#GetGameList
+- https://favna.github.io/nintendo-switch-eshop/docs/Documentation/interfaces/TitleData
+
+# Infrastructure 
+- Netlify for deployment and writing api functions 
+- Hasura for graphQL database
+- Alchemy web3 suite
 # Chainlink Hardhat Box
 
 Implementation of the following 3 Chainlink features using the

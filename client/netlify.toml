@@ -1,5 +1,11 @@
 [build]
     functions = "functions"
+    publish = "build"
+    command = "npm run build"
+[dev]
+    autoLaunch = false
+[functions]
+    directory = "functions/"
 [[redirects]]
     from = "/api/*"
     to = "/.netlify/functions/:splat"
