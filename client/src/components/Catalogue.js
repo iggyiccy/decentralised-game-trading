@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, Row, Col } from "@douyinfe/semi-ui";
 import XboxLogo from "../media/xbox.svg";
 import PlaystationLogo from "../media/ps5.svg";
 import SwitchLogo from "../media/switch.svg";
 
 function Catalogue() {
-  //   const [visible, setVisible] = useState(false);
-  //   const changeVisible = () => {
-  //     setVisible(!visible);
-  //   };
   const { Meta } = Card;
   return (
     <>

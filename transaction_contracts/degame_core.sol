@@ -15,7 +15,7 @@ contract GameListing is ERC721URIStorage {
     address contractAddress;
 
     // Take the markeplace contract address to deploy the contract
-    constructor(address marketplaceAddress) ERC721("Nader's Digital Marketplace", "NDM") {
+    constructor(address marketplaceAddress) ERC721("DeGame Australia", "DEGAME") {
         contractAddress = marketplaceAddress;
     }
 
@@ -159,4 +159,8 @@ contract DeGameTrading is ReentrancyGuard {
    
     return items;
   }
+
+  // Royalties 
+  // Chainlink Off-chain oracle to fetch Nintendo Switch current game market price 
+  // https://docs.chain.link/docs/off-chain-oracle
 }

@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component} from "react";
 import { Typography } from "@douyinfe/semi-ui";
 import {
   Layout,
@@ -55,7 +55,7 @@ class App extends Component {
                   <Notification />
                   <Info />
                   <Avatar color="orange" size="small">
-                    YJ
+                    RE
                   </Avatar>
                 </Nav.Footer>
               </Nav>

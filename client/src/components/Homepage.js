@@ -1,6 +1,6 @@
 import React from "react";
-import { Tabs, TabPane } from "@douyinfe/semi-ui";
-
+import { Tabs, TabPane, Card } from "@douyinfe/semi-ui";
+const { Meta } = Card;
 class Homepage extends React.Component {
   render() {
     return (
@@ -55,6 +55,17 @@ class Homepage extends React.Component {
           </TabPane>
           <TabPane tab="Help" itemKey="3">
             <h3>Help</h3>
+            <Card
+              style={{ maxWidth: 300, height: "100%", margin: "0 auto" }}
+              cover={ 
+                <img 
+                  alt="example" 
+                  src="https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/card-cover-docs-demo2.jpeg" 
+                />
+              }
+            >
+              <Meta title="Card cover" />
+            </Card>
             <p
               style={{
                 lineHeight: 1.8,
