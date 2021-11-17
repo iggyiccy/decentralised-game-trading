@@ -1,13 +1,6 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import { Typography } from "@douyinfe/semi-ui";
-import {
-  Layout,
-  Nav,
-  Button,
-  Breadcrumb,
-  Skeleton,
-  Avatar,
-} from "@douyinfe/semi-ui";
+import { Layout, Nav, Button, Breadcrumb, Skeleton } from "@douyinfe/semi-ui";
 import {
   IconSemiLogo,
   IconGithubLogo,
@@ -22,6 +15,7 @@ import Announcement from "./components/Announcement";
 import "./App.css";
 import Homepage from "./components/Homepage";
 import Catalogue from "./components/Catalogue";
+import UserProfile from "./components/UserProfile";
 
 class App extends Component {
   render() {
@@ -45,7 +39,8 @@ class App extends Component {
                     style={{
                       marginRight: "24px",
                       color: "var(--semi-color-text-0)",
-                      fontWeight: "600",
+                      fontWeight: "1000",
+                      fontSize: "20px",
                     }}
                   >
                     DeGame
@@ -54,9 +49,7 @@ class App extends Component {
                 <Nav.Footer>
                   <Notification />
                   <Info />
-                  <Avatar color="orange" size="small">
-                    RE
-                  </Avatar>
+                  <UserProfile />
                 </Nav.Footer>
               </Nav>
             </div>
@@ -79,8 +72,8 @@ class App extends Component {
                     icon: <IconSearch size="large" />,
                   },
                   {
-                    itemKey: "Setting",
-                    text: "Setting",
+                    itemKey: "Bookmark",
+                    text: "Bookmark",
                     icon: <IconBookmark size="large" />,
                   },
                   {
