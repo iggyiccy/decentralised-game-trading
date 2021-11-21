@@ -1,29 +1,18 @@
-const fetch = require('node-fetch');
-const { hasuraRequest } = require('./util/hasura');
+const fetch = require("node-fetch");
+const { hasuraRequest } = require("./util/hasura");
+const web3 = require("web3");
 
 exports.handler = async () => {
-    // Get all the corgis
-  const corgis = await fetch(
-    'https://no-cors-api.netlify.app/api/corgis/'
-  ).then((res) => res.json());
+  // Get the user's ethereum address
+  const { address } = await web3.eth.getAccounts();
 
-    // Get all the corgi images
-  const unsplashPromise = fetch(
-    'https://api.unsplash.com/collections/48405776/photos',
-    {
-      headers: {
-        Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
-      },
-    }
-  ).then((res) => res.json());
-
+  // Create the user in the database
   const hasuraPromise = hasuraRequest({
     query: `
-      mutation InsertOrUpdateBoops($corgis: [boops_insert_input!]!) {
-        boops: insert_boops(objects: $corgis, on_conflict: {constraint: boops_pkey, update_columns: id}) {
+      mutation CreateUser {
+        insert_users(objects: {user_id: "0x811A49Bea75c77a0F9b67b21032b9d79849cA4BD", postcode: 1234, email: "light@test.com", newsletter: true, trading: true}) {
           returning {
-            id
-            count
+            created_at
           }
         }
       }
@@ -54,7 +43,7 @@ exports.handler = async () => {
   return {
     statusCode: 200,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(completeData),
   };
