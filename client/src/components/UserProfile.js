@@ -1,9 +1,8 @@
 import React from "react";
 import { Modal, Button } from "@douyinfe/semi-ui";
 import { IconCreditCard } from "@douyinfe/semi-icons";
-import { Banner } from "@douyinfe/semi-ui";
 import { Form } from "@douyinfe/semi-ui";
-import getWeb3 from "../getWeb3";
+import Wallet from "./Wallet";
 
 class userProfile extends React.Component {
   constructor() {
@@ -29,25 +28,6 @@ class userProfile extends React.Component {
     });
   }
 
-  state = { web3: null, accounts: null };
-
-  connectWallet = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Set web3, accounts to the state, and then proceed with an
-      this.setState({ web3, accounts });
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(`Failed to load wallet, please reconnect.`);
-      console.error(error);
-    }
-  };
-
   render() {
     const btnStyle = {
       width: 240,
@@ -68,51 +48,6 @@ class userProfile extends React.Component {
         </Button>
       </div>
     );
-
-    if (!this.state.web3) {
-      return (
-        <>
-          <Button
-            onClick={this.showDialog}
-            theme="borderless"
-            icon={<IconCreditCard size="large" />}
-            style={{
-              color: "var(--semi-color-text-2)",
-              marginRight: "12px",
-            }}
-          />
-          <Modal
-            header={null}
-            visible={this.state.visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            footer={footer}
-            width={350}
-            height={700}
-            bodyStyle={{ overflow: "auto" }}
-            maskClosable={false}
-          >
-            <div style={{ textAlign: "center", marginTop: "250px" }}>
-              <Banner
-                type="danger"
-                closeIcon={null}
-                title={
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      fontSize: "16px",
-                      lineHeight: "30px",
-                    }}
-                  >
-                    Failed to load wallet, please reconnect.
-                  </div>
-                }
-              />
-            </div>
-          </Modal>
-        </>
-      );
-    }
 
     return (
       <>
@@ -136,9 +71,7 @@ class userProfile extends React.Component {
           bodyStyle={{ overflow: "auto" }}
           maskClosable={false}
         >
-          <h3 style={{ textAlign: "center", fontSize: 24, marginTop: 40 }}>
-            {this.state.accounts[0]}
-          </h3>
+          <Wallet />
           <Form
             labelPosition="top"
             labelWidth="200px"
