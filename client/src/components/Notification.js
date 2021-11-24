@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SideSheet, Button, Card, Typography } from "@douyinfe/semi-ui";
+import { SideSheet, Button, Card, Typography, Badge } from "@douyinfe/semi-ui";
 import { IconBell } from "@douyinfe/semi-icons";
 
 function Notification() {
@@ -18,6 +18,8 @@ function Notification() {
           color: "var(--semi-color-text-2)",
           marginRight: "12px",
         }}
+        // disabled={true}
+        // disable notification when user is not logged in
       />
       <SideSheet
         title="Notification"

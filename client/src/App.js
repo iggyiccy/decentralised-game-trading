@@ -65,21 +65,48 @@ class App extends Component {
                     itemKey: "Home",
                     text: "Home",
                     icon: <IconHome size="large" />,
+                    onClick: () => {
+                      window.location.href = "/";
+                      this.setState({
+                        page: "Home",
+                      });
+                    },
                   },
                   {
                     itemKey: "Search",
                     text: "Search",
                     icon: <IconSearch size="large" />,
+                    // direction user to search page
+                    onClick: () => {
+                      window.location.href = "/search";
+                      this.setState({
+                        page: "Search",
+                      });
+                    },
                   },
                   {
                     itemKey: "Bookmark",
                     text: "Bookmark",
                     icon: <IconBookmark size="large" />,
+                    disabled: true,
+                    onClick: () => {
+                      window.location.href = "/bookmark";
+                      this.setState({
+                        page: "Bookmark",
+                      });
+                    },
                   },
                   {
                     itemKey: "Inbox",
                     text: "Inbox",
                     icon: <IconInbox size="large" />,
+                    disabled: true,
+                    onClick: () => {
+                      window.location.href = "/inbox";
+                      this.setState({
+                        page: "Inbox",
+                      });
+                    },
                   },
                 ]}
                 footer={{
