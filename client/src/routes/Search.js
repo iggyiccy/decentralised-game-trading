@@ -1,5 +1,5 @@
 import React from "react";
-import { AutoComplete, Avatar } from "@douyinfe/semi-ui";
+import { AutoComplete, Avatar, Skeleton } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 
 class Search extends React.Component {
@@ -67,16 +67,52 @@ class Search extends React.Component {
   }
 
   render() {
+    const style = {
+      marginTop: "30px",
+      marginBottom: "30px",
+      width: "100%",
+      display: "flex",
+      alignItems: "flex-start",
+    };
+    const placeholder = (
+      <div style={style}>
+        <Skeleton.Avatar style={{ marginRight: 12 }} />
+        <div>
+          <Skeleton.Title
+            style={{ width: 120, marginBottom: 12, marginTop: 12 }}
+          />
+          <Skeleton.Paragraph style={{ width: 240 }} rows={3} />
+        </div>
+      </div>
+    );
+
     return (
-      <AutoComplete
-        data={this.state.data}
-        prefix={<IconSearch />}
-        style={{ width: "250px" }}
-        renderSelectedItem={(option) => option.email}
-        renderItem={this.renderOption}
-        onSearch={this.search.bind(this)}
-        onSelect={(v) => console.log(v)}
-      ></AutoComplete>
+      <>
+        <AutoComplete
+          size="large"
+          data={this.state.data}
+          placeholder="Search"
+          prefix={<IconSearch />}
+          style={{ width: "100%" }}
+          renderSelectedItem={(option) => option.email}
+          renderItem={this.renderOption}
+          onSearch={this.search.bind(this)}
+          onSelect={(v) => console.log(v)}
+        ></AutoComplete>
+        <Skeleton placeholder={placeholder} loading={true} active>
+          <div style={style}>
+            <Avatar color="blue" style={{ marginRight: 12 }}>
+              UI
+            </Avatar>
+            <div>
+              <h3>Semi UI</h3>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+            </div>
+          </div>
+        </Skeleton>
+      </>
     );
   }
 }

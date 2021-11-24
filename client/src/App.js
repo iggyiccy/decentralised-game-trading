@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Typography } from "@douyinfe/semi-ui";
-import { Layout, Nav, Button, Breadcrumb, Skeleton } from "@douyinfe/semi-ui";
+import { Layout, Nav, Button } from "@douyinfe/semi-ui";
 import {
   IconSemiLogo,
   IconGithubLogo,
@@ -11,11 +11,9 @@ import {
 } from "@douyinfe/semi-icons";
 import Info from "./components/Info";
 import Notification from "./components/Notification";
-import Announcement from "./components/Announcement";
 import "./App.css";
-import Homepage from "./components/Homepage";
-import Catalogue from "./components/Catalogue";
 import UserProfile from "./components/UserProfile";
+import { Outlet } from "react-router-dom";
 
 class App extends Component {
   render() {
@@ -65,48 +63,52 @@ class App extends Component {
                     itemKey: "Home",
                     text: "Home",
                     icon: <IconHome size="large" />,
-                    onClick: () => {
-                      window.location.href = "/";
-                      this.setState({
-                        page: "Home",
-                      });
-                    },
+                    link: "/",
+                    // onClick: () => {
+                    //   window.location.href = "/";
+                    //   this.setState({
+                    //     page: "Home",
+                    //   });
+                    // },
                   },
                   {
                     itemKey: "Search",
                     text: "Search",
                     icon: <IconSearch size="large" />,
+                    link: "/search",
                     // direction user to search page
-                    onClick: () => {
-                      window.location.href = "/search";
-                      this.setState({
-                        page: "Search",
-                      });
-                    },
+                    // onClick: () => {
+                    //   window.location.href = "/search";
+                    //   this.setState({
+                    //     page: "Search",
+                    //   });
+                    // },
                   },
                   {
                     itemKey: "Bookmark",
                     text: "Bookmark",
                     icon: <IconBookmark size="large" />,
                     disabled: true,
-                    onClick: () => {
-                      window.location.href = "/bookmark";
-                      this.setState({
-                        page: "Bookmark",
-                      });
-                    },
+                    link: "/bookmark",
+                    // onClick: () => {
+                    //   window.location.href = "/bookmark";
+                    //   this.setState({
+                    //     page: "Bookmark",
+                    //   });
+                    // },
                   },
                   {
                     itemKey: "Inbox",
                     text: "Inbox",
                     icon: <IconInbox size="large" />,
                     disabled: true,
-                    onClick: () => {
-                      window.location.href = "/inbox";
-                      this.setState({
-                        page: "Inbox",
-                      });
-                    },
+                    link: "/inbox",
+                    // onClick: () => {
+                    //   window.location.href = "/inbox";
+                    //   this.setState({
+                    //     page: "Inbox",
+                    //   });
+                    // },
                   },
                 ]}
                 footer={{
@@ -121,35 +123,7 @@ class App extends Component {
                 backgroundColor: "var(--semi-color-bg-0)",
               }}
             >
-              <Breadcrumb
-                compact={true}
-                style={{
-                  marginBottom: "16px",
-                }}
-              >
-                <Breadcrumb.Item icon={<IconHome />}></Breadcrumb.Item>
-                <Breadcrumb.Item>Nintendo Switch</Breadcrumb.Item>
-                <Breadcrumb.Item>Latest Game Listing</Breadcrumb.Item>
-              </Breadcrumb>
-              <div
-                style={{
-                  borderRadius: "10px",
-                  border: "1px solid var(--semi-color-border)",
-                  padding: "16px",
-                }}
-              >
-                <Announcement />
-                <Catalogue />
-                <Homepage />
-                <br />
-                <Skeleton
-                  placeholder={<Skeleton.Paragraph rows={2} />}
-                  loading={true}
-                >
-                  <p>Hi, Bytedance dance dance.</p>
-                  <p>Hi, Bytedance dance dance.</p>
-                </Skeleton>
-              </div>
+              <Outlet />
             </Content>
           </Layout>
           <Footer

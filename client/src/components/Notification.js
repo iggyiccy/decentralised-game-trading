@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SideSheet, Button, Card, Typography, Badge } from "@douyinfe/semi-ui";
+import { SideSheet, Button, Card, Typography } from "@douyinfe/semi-ui";
 import { IconBell } from "@douyinfe/semi-icons";
 
 function Notification() {
