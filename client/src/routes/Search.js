@@ -50,9 +50,9 @@ class Search extends React.Component {
   }
 
   renderOption(item) {
-    let optionStyle = {
-      display: "flex",
-    };
+    // let optionStyle = {
+    //   display: "flex",
+    // };
     return (
       <>
         <Avatar color={item.color} size="small">
