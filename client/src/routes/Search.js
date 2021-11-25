@@ -112,6 +112,32 @@ class Search extends React.Component {
             </div>
           </div>
         </Skeleton>
+        <Skeleton placeholder={placeholder} loading={true} active>
+          <div style={style}>
+            <Avatar color="blue" style={{ marginRight: 12 }}>
+              UI
+            </Avatar>
+            <div>
+              <h3>Semi UI</h3>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+            </div>
+          </div>
+        </Skeleton>
+        <Skeleton placeholder={placeholder} loading={true} active>
+          <div style={style}>
+            <Avatar color="blue" style={{ marginRight: 12 }}>
+              UI
+            </Avatar>
+            <div>
+              <h3>Semi UI</h3>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+              <p>Hi, Bytedance dance dance.</p>
+            </div>
+          </div>
+        </Skeleton>
       </>
     );
   }
