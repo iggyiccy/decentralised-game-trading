@@ -3,9 +3,9 @@ import { Form, Row, Button, Typography } from "@douyinfe/semi-ui";
 import { useFormState } from "@douyinfe/semi-ui";
 
 class Create extends React.Component {
-  constructor() {
-    super();
-  }
+  // constructor() {
+  //   super();
+  // }
 
   render() {
     const ComponentUsingFormState = () => {
@@ -17,8 +17,7 @@ class Create extends React.Component {
       );
     };
     async function onSubmit(e) {
-      e.preventDefault();
-      const formState = useFormState();
+      const formState = useFormState;
       console.log(formState);
       const res = await fetch("/.netlify/functions/create", {
         method: "POST",
@@ -98,7 +97,6 @@ class Create extends React.Component {
           style={{ padding: 10, width: "100%", wordWrap: "break-word" }}
           onValueChange={(v) => console.log(v)}
           onSubmit={onSubmit}
-          netlify
         >
           <Title heading={5} style={{ marginBottom: 10 }}>
             {`\u{1F195}`} Create a New Listing
