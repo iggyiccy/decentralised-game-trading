@@ -1,5 +1,9 @@
 # Decentralised Game Trading Marketplace
 
+## Deployed on to Netlify
+
+### Please visit [Degame.tech](degame.tech) to view the live site
+
 ![](https://media.giphy.com/media/TL0oXBlykdF7ekXI9w/giphy.gif)
 ![](screenshot.gif)
 
@@ -20,15 +24,23 @@ Features:
 - Organise F2F meetup
 - Decentralised chat feature using Status
 
-# External APIs used 
-- https://github.com/ZekeSnider/NintendoSwitchRESTAPI 
-- Get switch's game list https://github.com/ZekeSnider/NintendoSwitchRESTAPI/blob/master/SwitchBlueprint.md#GetGameList
+## Ethereum account
+
+Address: 0x8e764854EB4d6261581A55107F8aD7d2392dFB63 (rchow.eth)
+
+# External APIs used
+
+- https://github.com/ZekeSnider/NintendoSwitchRESTAPI
+- Get switch's game list
+  https://github.com/ZekeSnider/NintendoSwitchRESTAPI/blob/master/SwitchBlueprint.md#GetGameList
 - https://favna.github.io/nintendo-switch-eshop/docs/Documentation/interfaces/TitleData
 
-# Infrastructure 
-- Netlify for deployment and writing api functions 
+# Infrastructure
+
+- Netlify for deployment and writing api functions
 - Hasura for graphQL database
 - Alchemy web3 suite
+
 # Chainlink Hardhat Box
 
 Implementation of the following 3 Chainlink features using the
