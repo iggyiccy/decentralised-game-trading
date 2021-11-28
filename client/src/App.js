@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Typography } from "@douyinfe/semi-ui";
 import { Layout, Nav, Button } from "@douyinfe/semi-ui";
 import {
-  IconSemiLogo,
   IconGithubLogo,
   IconHome,
   IconSearch,

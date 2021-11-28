@@ -90,7 +90,7 @@ class Create extends React.Component {
           onValueChange={(v) => console.log(v)}
         >
           <Title heading={5} style={{ marginBottom: 10 }}>
-            🆕 Create a New Listing
+            {`\u{1F195}`} Create a New Listing
           </Title>
           <Paragraph type="tertiary">
             {`Fill in the below informations to list your game to the DeGame marketplace. The game listing will be published under your ethereum wallet address deposit is required for each listing. Deposit amount is equal to the list price you set. Deposit will be returned to your wallet once trade completed.`}
@@ -100,7 +100,7 @@ class Create extends React.Component {
             <Select
               field="category"
               style={style}
-              label="🪧 Category"
+              label={"\u{1F4C2} Category"}
               placeholder="Select "
             >
               <Select.Option value="Nintendo Switch">
@@ -113,7 +113,7 @@ class Create extends React.Component {
           <Row>
             <Input
               field="title"
-              label="👾 What game are you selling?"
+              label={"\u{1F3AE} What game are you selling?"}
               initValue={"Animal Crossing: New Horizons"}
               style={style}
               trigger="blur"
@@ -122,7 +122,7 @@ class Create extends React.Component {
           <Row>
             <InputNumber
               field="price"
-              label="💲 List Price ($)"
+              label={"\u{1F4B2} List Price ($)"}
               initValue={20}
               style={style}
             />
@@ -132,7 +132,7 @@ class Create extends React.Component {
               placeholder="Choose Area"
               treeData={treeData}
               field="location"
-              label="🗺 Location"
+              label={"\u{1F310} Location"}
               style={style}
             ></Form.Cascader>
           </Row>
@@ -140,7 +140,7 @@ class Create extends React.Component {
             <TextArea
               style={{}}
               field="description"
-              label="✍️ Description"
+              label={"\u{1F4DD} Description"}
               maxCount={1000}
               initValue="do Lorem velit elit consectetur minim dolor eiusmod reprehenderit laborum excepteur consectetur consequat qui occaecat sit commodo ex commodo exercitation cillum sunt mollit amet reprehenderit amet deserunt excepteur ullamco tempor exercitation Lorem nulla aliquip mollit consectetur ut eu anim exercitation quis voluptate eu laboris voluptate elit dolore culpa non occaecat"
             />
@@ -148,7 +148,7 @@ class Create extends React.Component {
           <Row>
             <Switch
               field="shipping"
-              label="📦 Offer Shipping"
+              label={"\u{1F4E6} Offer Shipping"}
               style={{ marginRight: "95%" }}
             />
           </Row>
