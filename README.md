@@ -1,11 +1,10 @@
 # Decentralised Game Trading Marketplace
 
-## Deployed on to Netlify
-
-### Please visit [Degame.tech](degame.tech) to view the live site
-
 ![](https://media.giphy.com/media/TL0oXBlykdF7ekXI9w/giphy.gif)
-![](screenshot.gif)
+
+## [DeGame.Tech](degame.tech) is Deployed on to Netlify
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8678a4a4-a5aa-4273-ae70-d7325497aa58/deploy-status)](https://app.netlify.com/sites/optimistic-jang-9b2dae/deploys)
 
 ## Idea
 

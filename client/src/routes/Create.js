@@ -1,28 +1,33 @@
 import React from "react";
 import { Form, Row, Button, Typography } from "@douyinfe/semi-ui";
+import { useFormState } from "@douyinfe/semi-ui";
 
 class Create extends React.Component {
   constructor() {
     super();
-    this.state = {
-      initValues: {
-        name: "semi",
-        business: ["hotsoon"],
-        role: "ued",
-        switch: true,
-      },
-    };
-    this.getFormApi = this.getFormApi.bind(this);
-  }
-
-  getFormApi(formApi) {
-    this.formApi = formApi;
   }
 
   render() {
+    const ComponentUsingFormState = () => {
+      const formState = useFormState();
+      return (
+        <div style={{ wordWrap: true, marginTop: 20 }}>
+          <code>{JSON.stringify(formState)}</code>
+        </div>
+      );
+    };
+    async function onSubmit(e) {
+      e.preventDefault();
+      const formState = useFormState();
+      console.log(formState);
+      const res = await fetch("/.netlify/functions/create", {
+        method: "POST",
+        body: JSON.stringify(formState),
+      }).then((res) => res.json());
+      console.log(res);
+    }
     const { Input, InputNumber, Select, TextArea, Checkbox, Switch } = Form;
     const { Title, Paragraph } = Typography;
-    const { initValues } = this.state;
     const style = { width: "100%" };
     const treeData = [
       {
@@ -82,12 +87,18 @@ class Create extends React.Component {
     ];
 
     return (
-      <div className="create" style={{ display: "inline-flex", width: "75%" }}>
+      <div
+        className="create"
+        style={{
+          display: "inline-flex",
+          maxWidth: "850px",
+        }}
+      >
         <Form
-          getFormApi={this.getFormApi}
-          initValues={initValues}
           style={{ padding: 10, width: "100%", wordWrap: "break-word" }}
           onValueChange={(v) => console.log(v)}
+          onSubmit={onSubmit}
+          netlify
         >
           <Title heading={5} style={{ marginBottom: 10 }}>
             {`\u{1F195}`} Create a New Listing
@@ -160,6 +171,7 @@ class Create extends React.Component {
             Submit
           </Button>
           <Button htmlType="reset">Reset</Button>
+          <ComponentUsingFormState />
         </Form>
       </div>
     );
