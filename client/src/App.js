@@ -15,6 +15,7 @@ import Notification from "./components/Notification";
 import "./App.css";
 import UserProfile from "./components/UserProfile";
 import { Outlet } from "react-router-dom";
+import GameLogo from "./media/game.svg";
 
 class App extends Component {
   render() {
@@ -27,7 +28,11 @@ class App extends Component {
             <div>
               <Nav mode="horizontal" defaultSelectedKeys={["Home"]}>
                 <Nav.Header>
-                  <IconSemiLogo style={{ fontSize: 36 }} />
+                  <img
+                    alt="Logo"
+                    src={GameLogo}
+                    style={{ width: 40, height: 40, color: "black" }}
+                  />
                 </Nav.Header>
                 <span
                   style={{
