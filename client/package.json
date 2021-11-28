@@ -9,6 +9,7 @@
     "@metamask/detect-provider": "^1.2.0",
     "@walletconnect/client": "^2.0.0-beta.20",
     "@web3-react/core": "^6.1.9",
+    "ethers": "^5.5.1",
     "history": "^5.1.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",

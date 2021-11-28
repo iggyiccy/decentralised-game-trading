@@ -5,6 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Search from "./routes/Search";
+import Create from "./routes/Create";
 import Home from "./routes/Home";
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
       <Route path="/" element={<App />}>
         <Route path="/" element={<Home />} />
         <Route path="search" element={<Search />} />
+        <Route path="create" element={<Create />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

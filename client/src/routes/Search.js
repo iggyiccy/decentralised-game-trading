@@ -10,27 +10,27 @@ class Search extends React.Component {
       color: ["amber", "indigo", "cyan"],
       list: [
         {
-          name: "Xia",
-          email: "xiakeman@example.com",
-          abbr: "XK",
+          name: "Pokemon Brilliant Diamond",
+          type: "Nintendo Switch",
+          abbr: "PK",
           color: "amber",
         },
         {
-          name: "Shen",
-          email: "shenyue@example.com",
-          abbr: "SY",
+          name: "Minecraft",
+          type: "Nintendo Switch",
+          abbr: "MC",
           color: "indigo",
         },
         {
-          name: "Qu",
-          email: "quchenyi@example.com",
-          abbr: "CY",
+          name: "Mario Kart 8 Delux",
+          type: "Nintendo Switch",
+          abbr: "MK",
           color: "blue",
         },
         {
-          name: "Wen",
-          email: "wenjiamao@example.com",
-          abbr: "JM",
+          name: "Animal Crossing: New Horizons",
+          type: "Nintendo Switch",
+          abbr: "AC",
           color: "cyan",
         },
       ],
@@ -41,7 +41,7 @@ class Search extends React.Component {
     let result;
     if (value) {
       result = this.state.list.map((item) => {
-        return { ...item, value: item.name, label: item.email };
+        return { ...item, value: item.name, label: item.type };
       });
     } else {
       result = [];
@@ -59,8 +59,12 @@ class Search extends React.Component {
           {item.abbr}
         </Avatar>
         <div style={{ marginLeft: 4 }}>
-          <div style={{ fontSize: 14, marginLeft: 4 }}>{item.name}</div>
-          <div style={{ marginLeft: 4 }}>{item.email}</div>
+          <div style={{ fontSize: 14, marginLeft: 4, fontWeight: "bold" }}>
+            {item.name}
+          </div>
+          <div style={{ fontSize: 12, marginLeft: 4, color: "grey" }}>
+            {item.type}
+          </div>
         </div>
       </>
     );
@@ -94,7 +98,7 @@ class Search extends React.Component {
           placeholder="Search"
           prefix={<IconSearch />}
           style={{ width: "100%" }}
-          renderSelectedItem={(option) => option.email}
+          renderSelectedItem={(option) => option.type}
           renderItem={this.renderOption}
           onSearch={this.search.bind(this)}
           onSelect={(v) => console.log(v)}

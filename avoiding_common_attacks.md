@@ -9,7 +9,7 @@ found in the [testing folder](./test/simplestorage.js).
 ### Using Specific Compiler
 
 It is tend to be more secure if deploy contract using a specific version of
-solidity compiler pragma. We had choosen to use version 8.4.0 here.
+solidity compiler pragma. We had choosen to use version 0.8.10 here.
 
 ### Using Require, Assert and Revert
 

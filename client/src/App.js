@@ -8,6 +8,7 @@ import {
   IconSearch,
   IconInbox,
   IconBookmark,
+  IconCopyAdd,
 } from "@douyinfe/semi-icons";
 import Info from "./components/Info";
 import Notification from "./components/Notification";
@@ -76,6 +77,19 @@ class App extends Component {
                     text: "Search",
                     icon: <IconSearch size="large" />,
                     link: "/search",
+                    // direction user to search page
+                    // onClick: () => {
+                    //   window.location.href = "/search";
+                    //   this.setState({
+                    //     page: "Search",
+                    //   });
+                    // },
+                  },
+                  {
+                    itemKey: "Create",
+                    text: "Create",
+                    icon: <IconCopyAdd size="large" />,
+                    link: "/create",
                     // direction user to search page
                     // onClick: () => {
                     //   window.location.href = "/search";

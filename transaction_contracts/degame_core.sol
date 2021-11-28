@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.10;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -19,15 +19,15 @@ contract GameListing is ERC721URIStorage {
         contractAddress = marketplaceAddress;
     }
 
-    // Pass the token uri to the function will store the uri in the ERC721 storage, mint the token and add it to the total supply
+    // Pass game trading metadata to the createToken function will create a new ERC721 token for the DeGame Trading contract to use
     function createToken(string memory tokenURI) public returns (uint) {
         _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
+        uint256 newgameID = _tokenIds.current();
 
-        _mint(msg.sender, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        _mint(msg.sender, newgameID);
+        _setTokenURI(newgameID, tokenURI);
         setApprovalForAll(contractAddress, true);
-        return newItemId;
+        return newgameID;
     }
 }
 
@@ -35,43 +35,50 @@ contract GameListing is ERC721URIStorage {
 // ReentrancyGuard is an OpenZeppelin contract that allows to prevent reentrancy attacks
 contract DeGameTrading is ReentrancyGuard {
 
-    // Count the total number of listings and total number of items sold
+  // Count and index the item id and total number of items sold
   using Counters for Counters.Counter;
-  Counters.Counter private _itemIds;
+  Counters.Counter private _gameIDs;
   Counters.Counter private _itemsSold;
 
-  address payable owner;
+  // Payable to the contract deloyer address 
+  // Listing fee is 0.1 ether
+  address payable deloyer;
   uint256 listingPrice = 0.1 ether;
 
+  // Default deloyer of this contract is whoever deploys it
   constructor() {
-    owner = payable(msg.sender);
+    deloyer = payable(msg.sender);
   }
 
-  struct MarketItem {
-    uint itemId;
+  // A typical game item contain game id, nft contract address, ERC721 token id, seller address, buyer address, and price
+  struct GameItem {
+    uint gameID;
     address nftContract;
     uint256 tokenId;
     address payable seller;
-    address payable owner;
+    address payable deloyer;
     uint256 price;
   }
 
-  mapping(uint256 => MarketItem) private idToMarketItem;
-
-  event MarketItemCreated (
-    uint indexed itemId,
+  mapping(uint256 => GameItem) private idToGameItem;
+  
+  // Log the game item to the blockchain whenever a new game item is created
+  event GameItemCreated (
+    uint indexed gameID,
     address indexed nftContract,
     uint256 indexed tokenId,
     address seller,
-    address owner,
+    address deloyer,
     uint256 price
   );
 
-  function getMarketItem(uint256 marketItemId) public view returns (MarketItem memory) {
-    return idToMarketItem[marketItemId];
+  // Function to get a sepcific game item from the blockchain by passing in the game id
+  function getGameItem(uint256 GameItemID) public view returns (GameItem memory) {
+    return idToGameItem[GameItemID];
   }
 
-  function createMarketItem(
+  // Function to create a new game item and add log to the blockchain
+  function createGameItem(
     address nftContract,
     uint256 tokenId,
     uint256 price
@@ -79,11 +86,11 @@ contract DeGameTrading is ReentrancyGuard {
     require(price > 0, "Price must be at least 1 wei");
     require(msg.value == listingPrice, "Price must be equal to listing price");
 
-    _itemIds.increment();
-    uint256 itemId = _itemIds.current();
+    _gameIDs.increment();
+    uint256 gameID = _gameIDs.current();
   
-    idToMarketItem[itemId] =  MarketItem(
-      itemId,
+    idToGameItem[gameID] =  GameItem(
+      gameID,
       nftContract,
       tokenId,
       payable(msg.sender),
@@ -93,8 +100,8 @@ contract DeGameTrading is ReentrancyGuard {
 
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
-    emit MarketItemCreated(
-      itemId,
+    emit GameItemCreated(
+      gameID,
       nftContract,
       tokenId,
       msg.sender,
@@ -103,31 +110,33 @@ contract DeGameTrading is ReentrancyGuard {
     );
   }
 
+  // Function to buy a game item from the marketplace by passing in the game id
   function createMarketSale(
     address nftContract,
-    uint256 itemId
+    uint256 gameID
     ) public payable nonReentrant {
-    uint price = idToMarketItem[itemId].price;
-    uint tokenId = idToMarketItem[itemId].tokenId;
+    uint price = idToGameItem[gameID].price;
+    uint tokenId = idToGameItem[gameID].tokenId;
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
-    idToMarketItem[itemId].seller.transfer(msg.value);
+    idToGameItem[gameID].seller.transfer(msg.value);
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
-    idToMarketItem[itemId].owner = payable(msg.sender);
+    idToGameItem[gameID].deloyer = payable(msg.sender);
     _itemsSold.increment();
-    payable(owner).transfer(listingPrice);
+    payable(deloyer).transfer(listingPrice);
   }
 
-  function fetchMarketItems() public view returns (MarketItem[] memory) {
-    uint itemCount = _itemIds.current();
-    uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
+  // Function to get all the game items that is currently listed on the marketplace for sale
+  function fetchGameItems() public view returns (GameItem[] memory) {
+    uint itemCount = _gameIDs.current();
+    uint unsoldItemCount = _gameIDs.current() - _itemsSold.current();
     uint currentIndex = 0;
 
-    MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+    GameItem[] memory items = new GameItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToMarketItem[i + 1].owner == address(0)) {
+      if (idToGameItem[i + 1].deloyer == address(0)) {
         uint currentId = i + 1;
-        MarketItem storage currentItem = idToMarketItem[currentId];
+        GameItem storage currentItem = idToGameItem[currentId];
         items[currentIndex] = currentItem;
         currentIndex += 1;
       }
@@ -136,22 +145,23 @@ contract DeGameTrading is ReentrancyGuard {
     return items;
   }
 
-  function fetchMyNFTs() public view returns (MarketItem[] memory) {
-    uint totalItemCount = _itemIds.current();
+  // Function to check the game item that you had purchased
+  function fetchMyNFTs() public view returns (GameItem[] memory) {
+    uint totalItemCount = _gameIDs.current();
     uint itemCount = 0;
     uint currentIndex = 0;
 
     for (uint i = 0; i < totalItemCount; i++) {
-      if (idToMarketItem[i + 1].owner == msg.sender) {
+      if (idToGameItem[i + 1].deloyer == msg.sender) {
         itemCount += 1;
       }
     }
 
-    MarketItem[] memory items = new MarketItem[](itemCount);
+    GameItem[] memory items = new GameItem[](itemCount);
     for (uint i = 0; i < totalItemCount; i++) {
-      if (idToMarketItem[i + 1].owner == msg.sender) {
+      if (idToGameItem[i + 1].deloyer == msg.sender) {
         uint currentId = i + 1;
-        MarketItem storage currentItem = idToMarketItem[currentId];
+        GameItem storage currentItem = idToGameItem[currentId];
         items[currentIndex] = currentItem;
         currentIndex += 1;
       }
@@ -160,7 +170,8 @@ contract DeGameTrading is ReentrancyGuard {
     return items;
   }
 
-  // Royalties 
-  // Chainlink Off-chain oracle to fetch Nintendo Switch current game market price 
+  // Features to be added:
+  // 1. Royalties 
+  // 2. Chainlink off-chain oracle to fetch Nintendo Switch current game market price 
   // https://docs.chain.link/docs/off-chain-oracle
 }
