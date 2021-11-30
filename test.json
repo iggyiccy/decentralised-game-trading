@@ -1,0 +1,21 @@
+{
+  "values": {
+    "title": "Animal Crossing: New Horizons",
+    "price": 20,
+    "description": "do Lorem velit elit consectetur minim dolor eiusmod reprehenderit laborum excepteur consectetur consequat qui occaecat sit commodo ex commodo exercitation cillum sunt mollit amet reprehenderit amet deserunt excepteur ullamco tempor exercitation Lorem nulla aliquip mollit consectetur ut eu anim exercitation quis voluptate eu laboris voluptate elit dolore culpa non occaecat",
+    "category": "Xbox",
+    "location": ["VIC", "Melbourne", "City"],
+    "shipping": true,
+    "agree": true
+  },
+  "errors": {},
+  "touched": {
+    "category": true,
+    "price": true,
+    "location": true,
+    "shipping": true,
+    "agree": true,
+    "title": true,
+    "description": true
+  }
+}

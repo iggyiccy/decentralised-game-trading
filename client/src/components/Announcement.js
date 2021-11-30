@@ -9,10 +9,10 @@ function Announcement() {
   const banner = (
     <Banner
       fullMode={false}
-      title="🎉 Beta version is now live on Polygon!"
+      title="🎉 Beta version is now live on Polygon Mumbai Testnet!"
       type="info"
       bordered
-      description="Please ensure your wallet is connected to the Polygon network in order to interact with DeGame web application. Click the button below to learn how to configure and add Polygon to your Metamask. "
+      description="Please ensure your wallet is connected to the Polygon Mumbai network in order to interact with DeGame web application. Click the button below to learn how to configure and add Polygon Mumbai network to your Metamask. "
     >
       <div className="semi-modal-footer">
         <button

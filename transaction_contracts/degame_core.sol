@@ -20,14 +20,36 @@ contract GameListing is ERC721URIStorage {
     }
 
     // Pass game trading metadata to the createToken function will create a new ERC721 token for the DeGame Trading contract to use
-    function createToken(string memory tokenURI) public returns (uint) {
+    // The metadata will be stored in the URI of the token
+    function createGameListing(string memory gameListingDetails) public returns (uint) {
         _tokenIds.increment();
         uint256 newgameID = _tokenIds.current();
 
         _mint(msg.sender, newgameID);
-        _setTokenURI(newgameID, tokenURI);
+        _setTokenURI(newgameID, gameListingDetails);
         setApprovalForAll(contractAddress, true);
         return newgameID;
+    }
+
+    // This function is to check if the game listing exist or not
+    function checkGameListing(uint gameID) public view returns (bool) {
+        return _exists(gameID);
+    }
+
+    // This function is to get the game listing details
+    function getGameListingDetails(uint gameID) public view returns (string memory) {
+        return tokenURI(gameID);
+    }
+
+    // Martketplace contract can call this function to burn/cancel the game listing
+    function cancelGameListing(uint gameID) public {
+        require(msg.sender == contractAddress);
+        require(checkGameListing(gameID));
+        _burn(gameID);
+    }
+
+    function getLastListingID() public view returns (uint) {
+        return _tokenIds.current();
     }
 }
 
@@ -43,7 +65,7 @@ contract DeGameTrading is ReentrancyGuard {
   // Payable to the contract deloyer address 
   // Listing fee is 0.1 ether
   address payable deloyer;
-  uint256 listingPrice = 0.1 ether;
+  uint256 listingPrice = 0.01 ether;
 
   // Default deloyer of this contract is whoever deploys it
   constructor() {
@@ -84,7 +106,7 @@ contract DeGameTrading is ReentrancyGuard {
     uint256 price
   ) public payable nonReentrant {
     require(price > 0, "Price must be at least 1 wei");
-    require(msg.value == listingPrice, "Price must be equal to listing price");
+    require(msg.value > listingPrice, "Price must be greater than the listing price");
 
     _gameIDs.increment();
     uint256 gameID = _gameIDs.current();

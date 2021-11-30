@@ -1,6 +1,8 @@
 import React from "react";
-import { AutoComplete, Avatar, Skeleton } from "@douyinfe/semi-ui";
+import { AutoComplete, Avatar, Skeleton, Button } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import DeGame_Listing from "../contracts/DeGame_Listing.json";
+import { ethers } from "ethers";
 
 class Search extends React.Component {
   constructor() {
@@ -9,6 +11,12 @@ class Search extends React.Component {
       data: [],
       color: ["amber", "indigo", "cyan"],
       list: [
+        {
+          name: "Testing Call Smart Contract Function",
+          type: "GameID: #1",
+          abbr: "TC",
+          color: "green",
+        },
         {
           name: "Pokemon Brilliant Diamond",
           type: "Nintendo Switch",
@@ -70,6 +78,30 @@ class Search extends React.Component {
     );
   }
 
+  async getGameListing(value) {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const NFTcontract = new ethers.Contract(
+      "0x64c4bC7008Af9ebB2CC084FFA443DF74DDF35d49",
+      DeGame_Listing,
+      signer
+    );
+    // call the contract function .createGameListing() from the DeGame_Listing smart contract
+    const CheckGameListing = await NFTcontract.checkGameListing(value);
+    const GetGameURI = await NFTcontract.getGameListingDetails(value);
+    try {
+      const GameExsitance = await CheckGameListing.toString();
+      const GameURI = await GetGameURI.toString();
+      console.log("Does the GameID exsit? Below are the game listing details.");
+      console.log("GameID: " + value);
+      console.log("GameID existance: " + GameExsitance);
+      console.log("Associated URI: " + GameURI);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
     const style = {
       marginTop: "30px",
@@ -95,7 +127,7 @@ class Search extends React.Component {
         <AutoComplete
           size="large"
           data={this.state.data}
-          placeholder="Search"
+          placeholder="Search by GameID"
           prefix={<IconSearch />}
           style={{ width: "100%" }}
           renderSelectedItem={(option) => option.type}
@@ -103,6 +135,13 @@ class Search extends React.Component {
           onSearch={this.search.bind(this)}
           onSelect={(v) => console.log(v)}
         ></AutoComplete>
+        <Button
+          size="default"
+          style={{ marginTop: 20 }}
+          onClick={() => this.getGameListing("1")}
+        >
+          Submit
+        </Button>
         <Skeleton placeholder={placeholder} loading={true} active>
           <div style={style}>
             <Avatar color="blue" style={{ marginRight: 12 }}>

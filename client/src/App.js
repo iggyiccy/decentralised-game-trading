@@ -8,6 +8,7 @@ import {
   IconInbox,
   IconBookmark,
   IconCopyAdd,
+  IconShoppingBag,
 } from "@douyinfe/semi-icons";
 import Info from "./components/Info";
 import Notification from "./components/Notification";
@@ -69,38 +70,24 @@ class App extends Component {
                     text: "Home",
                     icon: <IconHome size="large" />,
                     link: "/",
-                    // onClick: () => {
-                    //   window.location.href = "/";
-                    //   this.setState({
-                    //     page: "Home",
-                    //   });
-                    // },
                   },
                   {
                     itemKey: "Search",
                     text: "Search",
                     icon: <IconSearch size="large" />,
                     link: "/search",
-                    // direction user to search page
-                    // onClick: () => {
-                    //   window.location.href = "/search";
-                    //   this.setState({
-                    //     page: "Search",
-                    //   });
-                    // },
                   },
                   {
                     itemKey: "Create",
                     text: "Create",
                     icon: <IconCopyAdd size="large" />,
                     link: "/create",
-                    // direction user to search page
-                    // onClick: () => {
-                    //   window.location.href = "/search";
-                    //   this.setState({
-                    //     page: "Search",
-                    //   });
-                    // },
+                  },
+                  {
+                    itemKey: "Listing",
+                    text: "Listing",
+                    icon: <IconShoppingBag size="large" />,
+                    link: "/listing",
                   },
                   {
                     itemKey: "Bookmark",
@@ -108,12 +95,6 @@ class App extends Component {
                     icon: <IconBookmark size="large" />,
                     disabled: true,
                     link: "/bookmark",
-                    // onClick: () => {
-                    //   window.location.href = "/bookmark";
-                    //   this.setState({
-                    //     page: "Bookmark",
-                    //   });
-                    // },
                   },
                   {
                     itemKey: "Inbox",
@@ -121,12 +102,6 @@ class App extends Component {
                     icon: <IconInbox size="large" />,
                     disabled: true,
                     link: "/inbox",
-                    // onClick: () => {
-                    //   window.location.href = "/inbox";
-                    //   this.setState({
-                    //     page: "Inbox",
-                    //   });
-                    // },
                   },
                 ]}
                 footer={{
