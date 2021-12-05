@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alch/alchemy-web3": "^1.1.7",
-    "@douyinfe/semi-icons": "^2.0.3",
+    "@douyinfe/semi-icons": "^2.1.4",
     "@douyinfe/semi-ui": "^2.0.3",
     "@metamask/detect-provider": "^1.2.0",
     "@netlify/functions": "^0.10.0",
