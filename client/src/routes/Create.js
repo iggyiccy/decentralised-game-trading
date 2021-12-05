@@ -9,8 +9,6 @@ import DeGame_Core from "../contracts/DeGame_Core.json";
 import DeGame_Listing from "../contracts/DeGame_Listing.json";
 
 export default function Create() {
-  require("dotenv").config();
-
   // To inspect the values of the form, use the `useFormState` hook.
   const ComponentUsingFormState = () => {
     const formState = useFormState();
@@ -93,11 +91,13 @@ export default function Create() {
     // const amount = web3.utils.toWei("0.1", "ether");
     setConnectedWalletAddressState(`Connected wallet: ${signerAddress}`);
 
-    const HASURA_ADMIN = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     // Get Metadata from Hasura Server by referencing the title
     var myHeaders = new Headers();
     myHeaders.append("content-type", "application/json");
-    myHeaders.append("x-hasura-admin-secret", HASURA_ADMIN);
+    myHeaders.append(
+      "x-hasura-admin-secret",
+      process.env.REACT_APP_HASURA_GRAPHQL_ADMIN_SECRET
+    );
 
     var requestOptions = {
       method: "GET",
@@ -106,7 +106,8 @@ export default function Create() {
     };
 
     const response = await fetch(
-      "https://degame-cat-2v0s2t.hasura.app/api/rest/get_featured_metadata?_iregex=" +
+      process.env.REACT_APP_HASURA_API_URL +
+        "get_featured_metadata?_iregex=" +
         titleRef.current.value,
       requestOptions
     )
