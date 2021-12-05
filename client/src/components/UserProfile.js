@@ -27,15 +27,58 @@ class userProfile extends React.Component {
       visible: false,
     });
   }
-
+  // handleSubmit(e) {
+  //   e.preventDefault();
+  //   // console.log(e.target[0].value);
+  //   // console.log(e.target.elements.email.value);
+  //   // console.log(e.target.email.value);
+  //   console.log(this.inputNode.value);
+  // }
+  // createNewUser(e) {
+  //   // e.preventDefault();
+  //   // const formState = useFormState();
+  //   // console.log(JSON.stringify(formState));
+  //   console.log(e.target.email.value);
+  //   console.log(e.target.postcode.value);
+  //   console.log(e.target.about.value);
+  //   console.log(e.target.newsletter.value);
+  //   console.log(e.target.trade.value);
+  //   console.log(e.target[0].value);
+  //   // this.props.form.validateFields((err, values) => {
+  //   //   if (!err) {
+  //   //     console.log("Received values of form: ", values);
+  //   //   }
+  //   // });
+  // }
   render() {
+    // const emailRef = React.useRef();
+    // const postcodeRef = React.useRef();
+    // const aboutRef = React.useRef();
+    // const newsletterRef = React.useRef();
+    // const tradeRef = React.useRef();
+    // async function createNewUser(e) {
+    //   e.preventDefault();
+    //   console.log(e.target.email.value);
+    //   console.log(e.target.postcode.value);
+    //   console.log(e.target.about.value);
+    //   console.log(e.target.newsletter.value);
+    //   console.log(e.target.trade.value);
+    // }
     const btnStyle = {
       width: 240,
       margin: "4px 20px",
     };
     const footer = (
       <div style={{ textAlign: "center" }}>
-        <Button type="primary" theme="solid" htmlType="submit" style={btnStyle}>
+        <Button
+          type="primary"
+          theme="solid"
+          htmlType="submit"
+          style={btnStyle}
+          form="personal-info"
+          value="Submit"
+          // onClick={this.handleSubmit}
+        >
           Save
         </Button>
         <Button
@@ -48,7 +91,6 @@ class userProfile extends React.Component {
         </Button>
       </div>
     );
-
     return (
       <>
         <Button
@@ -73,15 +115,18 @@ class userProfile extends React.Component {
         >
           <Wallet />
           <Form
+            id="personal-info"
+            method="get"
             labelPosition="top"
             labelWidth="200px"
             labelAlign="left"
             style={{ paddingLeft: 30, width: 225, alignItems: "center" }}
             name="profile"
-            method="post"
+            // onSubmit={this.handleSubmit}
           >
             <input type="hidden" name="form-profile" value="profile" />
             <Form.Input
+              // ref={emailRef}
               type="email"
               name="email"
               field="input"
@@ -94,6 +139,7 @@ class userProfile extends React.Component {
               ]}
             />
             <Form.Input
+              // ref={(node) => (this.inputNode = node)}
               type="text"
               name="postcode"
               field="input"
@@ -109,6 +155,7 @@ class userProfile extends React.Component {
               ]}
             />
             <Form.TextArea
+              // ref={aboutRef}
               name="about"
               style={{ width: 200 }}
               field="about"
@@ -128,6 +175,7 @@ class userProfile extends React.Component {
               // }}
               >
                 <Form.Checkbox
+                  // ref={newsletterRef}
                   type="radio"
                   name="newsletter"
                   value="newsletter"
@@ -135,6 +183,7 @@ class userProfile extends React.Component {
                   Newsletter
                 </Form.Checkbox>
                 <Form.Checkbox
+                  // ref={tradeRef}
                   type="radio"
                   name="trade"
                   value="trade"

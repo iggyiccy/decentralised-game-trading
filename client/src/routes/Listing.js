@@ -21,6 +21,7 @@ export default function Listing() {
   // );
   // const CoreTransaction = CoreContract.fetchGameItems();
 
+  // TODO Get game listing details from the smart contract and database and display them
   // Call smart contract, get all the current game listings
   async function getCurrentGameListing() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
