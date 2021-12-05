@@ -14,7 +14,7 @@
     "ethers": "^5.5.1",
     "history": "^5.1.0",
     "nintendo-switch-eshop": "^7.0.1",
-    "react": "16.11.0",
+    "react": "16.14.0",
     "react-dom": "16.13.0",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
