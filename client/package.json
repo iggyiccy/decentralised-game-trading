@@ -3,20 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@alch/alchemy-web3": "^1.1.7",
-    "@douyinfe/semi-icons": "^2.0.3",
+    "@alch/alchemy-web3": "^1.1.9",
+    "@douyinfe/semi-icons": "^2.1.4",
     "@douyinfe/semi-ui": "^2.0.3",
     "@metamask/detect-provider": "^1.2.0",
     "@netlify/functions": "^0.10.0",
     "@walletconnect/client": "^2.0.0-beta.20",
     "@web3-react/core": "^6.1.9",
+    "dotenv": "^10.0.0",
     "ethers": "^5.5.1",
     "history": "^5.1.0",
+    "nintendo-switch-eshop": "^7.0.1",
     "react": "16.11.0",
-    "react-dom": "16.11.0",
+    "react-dom": "16.13.0",
     "react-router-dom": "^6.0.2",
     "react-scripts": "3.2.0",
-    "web3": "1.2.2"
+    "web3": "1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
