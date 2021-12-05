@@ -2,22 +2,22 @@ import React, { useEffect, useState, useRef } from "react";
 import { ethers } from "ethers";
 import { hasEthereum } from "../utils/ethereum";
 import { Form, Row, Button, Typography } from "@douyinfe/semi-ui";
-import { useFormState } from "@douyinfe/semi-ui";
+// import { useFormState } from "@douyinfe/semi-ui";
 
 // Import the contract ABI
 import DeGame_Core from "../contracts/DeGame_Core.json";
 import DeGame_Listing from "../contracts/DeGame_Listing.json";
 
 export default function Create() {
-  // To inspect the values of the form, use the `useFormState` hook.
-  const ComponentUsingFormState = () => {
-    const formState = useFormState();
-    return (
-      <div style={{ wordWrap: true, marginTop: 20 }}>
-        <Paragraph type="tertiary">{JSON.stringify(formState)}</Paragraph>
-      </div>
-    );
-  };
+  // // To inspect the values of the form, use the `useFormState` hook.
+  // const ComponentUsingFormState = () => {
+  //   const formState = useFormState();
+  //   return (
+  //     <div style={{ wordWrap: true, marginTop: 20 }}>
+  //       <Paragraph type="tertiary">{JSON.stringify(formState)}</Paragraph>
+  //     </div>
+  //   );
+  // };
 
   // Set up states for the form
   // eslint-disable-next-line
@@ -38,6 +38,7 @@ export default function Create() {
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submittedMsg, setSubmittedMsg] = useState("");
+  const [loginMsg, setLoginMsg] = useState("");
   const categoryRef = useRef();
   const titleRef = useRef();
   const priceRef = useRef();
@@ -50,7 +51,7 @@ export default function Create() {
   useEffect(() => {
     if (!hasEthereum()) {
       setConnectedWalletAddressState(
-        `MetaMask unavailable. Please connect wallet in order to create a listing.`
+        `\u{1F3E6} MetaMask unavailable. Please connect wallet in order to create a listing.`
       );
       setDisableSubmit(true);
       return;
@@ -60,13 +61,54 @@ export default function Create() {
       const signer = provider.getSigner();
       try {
         const signerAddress = await signer.getAddress();
-        setConnectedWalletAddressState(`Connected wallet: ${signerAddress}`);
+
+        setConnectedWalletAddressState(
+          `\u{1F3E6} Connected wallet: ${signerAddress}`
+        );
       } catch {
-        setConnectedWalletAddressState("No wallet connected");
+        setConnectedWalletAddressState("\u{1F3E6} No wallet connected");
         return;
       }
     }
+    async function setLoginMessage() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const signerAddress = await signer.getAddress();
+      // check against hasura server see if the user already registered details
+      // if not, then disable the submit button and show the message
+
+      var myHeaders = new Headers();
+      myHeaders.append("content-type", "application/json");
+      myHeaders.append(
+        "x-hasura-admin-secret",
+        process.env.REACT_APP_HASURA_GRAPHQL_ADMIN_SECRET
+      );
+
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      const response = await fetch(
+        "https://degame-cat-2v0s2t.hasura.app/api/rest/check_signup?_eq=" +
+          signerAddress,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .catch((error) => console.log("error", error));
+
+      if (response["users"].length < 1) {
+        setLoginMsg(
+          "\u{1F92D} Please register your details first before creating a new listing."
+        );
+        setDisableSubmit(true);
+      } else {
+        console.log("user already registered");
+      }
+    }
     setConnectedWalletAddress();
+    setLoginMessage();
   }, []);
 
   // Request access to MetaMask account
@@ -127,13 +169,11 @@ export default function Create() {
 
     if (response["game"].length < 1) {
       const metadata = "ipfs://QmdcW3oaiC4VsvWhM2d6vJuakjMFtJTKvTZS3zZteqokf4";
-      console.log(metadata);
       const NFTtransaction = await NFTcontract.createGameListing(metadata);
       await NFTtransaction.wait();
       console.log(NFTtransaction);
     } else {
       const metadata = response["game"][0]["metadata"];
-      console.log(metadata);
       const NFTtransaction = await NFTcontract.createGameListing(metadata);
       await NFTtransaction.wait();
       console.log(NFTtransaction);
@@ -155,6 +195,7 @@ export default function Create() {
     setSubmittedMsg(`🎉 Your game had been listed!`);
 
     // TODO Submit form to Hasura Server for internal use
+    // TODO Need to first build users database in Hasura Server
 
     categoryRef.current.value = "";
     titleRef.current.value = "";
@@ -244,7 +285,6 @@ export default function Create() {
     >
       <Form
         style={{ padding: 10, width: "100%", wordWrap: "break-word" }}
-        onValueChange={(v) => console.log(v)}
         onSubmit={createGameListingViaContract}
       >
         <Title heading={5} style={{ marginBottom: 10 }}>
@@ -258,6 +298,9 @@ export default function Create() {
             <p className="text-md">{connectedWalletAddress}</p>
           )}
         </Paragraph>
+        <div style={{ marginTop: 10 }}>
+          {loginMsg && <Paragraph type="danger">{loginMsg}</Paragraph>}
+        </div>
         <br />
         <Row>
           <Select
@@ -363,7 +406,6 @@ export default function Create() {
             </Title>
           )}
         </div>
-        <ComponentUsingFormState />
       </Form>
     </div>
   );
