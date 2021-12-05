@@ -3,7 +3,6 @@ import { AutoComplete, Avatar, Skeleton, Button } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import DeGame_Listing from "../contracts/DeGame_Listing.json";
 import { ethers } from "ethers";
-
 class Search extends React.Component {
   constructor() {
     super();

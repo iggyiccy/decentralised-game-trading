@@ -9,6 +9,8 @@ import DeGame_Core from "../contracts/DeGame_Core.json";
 import DeGame_Listing from "../contracts/DeGame_Listing.json";
 
 export default function Create() {
+  require("dotenv").config();
+
   // To inspect the values of the form, use the `useFormState` hook.
   const ComponentUsingFormState = () => {
     const formState = useFormState();
@@ -35,6 +37,8 @@ export default function Create() {
   // eslint-disable-next-line
   const [agree, setAgree] = useState(false);
   const [connectedWalletAddress, setConnectedWalletAddressState] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [submittedMsg, setSubmittedMsg] = useState("");
   const categoryRef = useRef();
   const titleRef = useRef();
@@ -47,7 +51,10 @@ export default function Create() {
   // If wallet is already connected...
   useEffect(() => {
     if (!hasEthereum()) {
-      setConnectedWalletAddressState(`MetaMask unavailable`);
+      setConnectedWalletAddressState(
+        `MetaMask unavailable. Please connect wallet in order to create a listing.`
+      );
+      setDisableSubmit(true);
       return;
     }
     async function setConnectedWalletAddress() {
@@ -69,45 +76,43 @@ export default function Create() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  // // Call smart contract, fetch current value
-  // async function fetchGameListingDetails() {
-  //   if (!hasEthereum()) {
-  //     setConnectedWalletAddressState(`MetaMask unavailable`);
-  //     return;
-  //   }
-  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //   const contract = new ethers.Contract(
-  //     // haven't deploy yet to testnet
-  //     process.env.DEGAME_CORE_CONTRACT,
-  //     // haven't import the ABI yet
-  //     CreateProjectToken.abi,
-  //     provider
-  //   );
-  //   try {
-  //     // call the contract function .getProjectTokenAddress()
-  //     const data = await contract.getProjectTokenAddress();
-  //     // set state and display the info to the user
-  //     setPTAddressState(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   // Call smart contract, set new value
-  async function createGameListingViaContract() {
+  async function createGameListingViaContract(e) {
     if (!hasEthereum()) {
       setConnectedWalletAddressState(`MetaMask unavailable`);
       return;
     }
-
+    setLoading(true);
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const signerAddress = await signer.getAddress();
+    // TODO Check if the address has enough balance to pay for the transaction
     // const web3 = require("web3");
     // Ether is equal to MATIC here
     // const amount = web3.utils.toWei("0.1", "ether");
     setConnectedWalletAddressState(`Connected wallet: ${signerAddress}`);
+
+    const HASURA_ADMIN = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
+    // Get Metadata from Hasura Server by referencing the title
+    var myHeaders = new Headers();
+    myHeaders.append("content-type", "application/json");
+    myHeaders.append("x-hasura-admin-secret", HASURA_ADMIN);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(
+      "https://degame-cat-2v0s2t.hasura.app/api/rest/get_featured_metadata?_iregex=" +
+        titleRef.current.value,
+      requestOptions
+    )
+      .then((res) => res.json())
+      .catch((error) => console.log("error", error));
+
     const NFTcontract = new ethers.Contract(
       "0x64c4bC7008Af9ebB2CC084FFA443DF74DDF35d49",
       DeGame_Listing,
@@ -119,22 +124,27 @@ export default function Create() {
       signer
     );
 
-    // call the contract function .createGameListing() from the DeGame_Listing smart contract
-    const NFTtransaction = await NFTcontract.createGameListing(
-      // pass in game metadata uri here - set a random string for now
-      "https://degame.tech/metadata/"
-    );
-    await NFTtransaction.wait();
-    console.log(NFTtransaction);
+    if (response["game"].length < 1) {
+      const metadata = "ipfs://QmdcW3oaiC4VsvWhM2d6vJuakjMFtJTKvTZS3zZteqokf4";
+      console.log(metadata);
+      const NFTtransaction = await NFTcontract.createGameListing(metadata);
+      await NFTtransaction.wait();
+      console.log(NFTtransaction);
+    } else {
+      const metadata = response["game"][0]["metadata"];
+      console.log(metadata);
+      const NFTtransaction = await NFTcontract.createGameListing(metadata);
+      await NFTtransaction.wait();
+      console.log(NFTtransaction);
+    }
 
-    // TODO How to get the returned GameID?
+    // TODO How to get the returned GameID? msg.sender?
     const GetIDTransaction = await NFTcontract.getLastListingID();
 
     // call the contract function .createGameItem() from the DeGame_Core smart contract
-    const options = { value: "100000000000000000" };
+    const options = { value: "100000000000000000" }; // current listing fee is 0.1 MATIC
     const CoreTransaction = await CoreContract.createGameItem(
       "0x64c4bC7008Af9ebB2CC084FFA443DF74DDF35d49",
-      // pass in the GameID here - use #3 as the default GameID for now
       GetIDTransaction,
       "100000000000000000",
       options
@@ -142,6 +152,9 @@ export default function Create() {
     await CoreTransaction.wait();
     console.log(CoreTransaction);
     setSubmittedMsg(`🎉 Your game had been listed!`);
+
+    // TODO Submit form to Hasura Server for internal use
+
     categoryRef.current.value = "";
     titleRef.current.value = "";
     priceRef.current.value = "";
@@ -156,6 +169,7 @@ export default function Create() {
     setDescription("");
     setShipment("");
     setAgree(false);
+    setLoading(false);
   }
 
   const { Input, InputNumber, Select, TextArea, Checkbox, Switch } = Form;
@@ -252,23 +266,24 @@ export default function Create() {
             placeholder="Select"
             ref={categoryRef}
             onValueChange={(e) => setCategory(e.target.value)}
+            rules={[{ required: true, message: "Please select a category" }]}
           >
             <Select.Option value="Nintendo Switch">
               Nintendo Switch
             </Select.Option>
-            <Select.Option value="Xbox">Xbox</Select.Option>
-            <Select.Option value="Play Station">Play Station</Select.Option>
           </Select>
         </Row>
         <Row>
           <Input
             field="title"
             label={"\u{1F3AE} What game are you selling?"}
-            initValue={"Animal Crossing: New Horizons"}
+            initValue={"Animal Crossing™: New Horizons"}
             style={style}
             trigger="blur"
             ref={titleRef}
+            name="title"
             onValueChange={(e) => setTitle(e.target.value)}
+            rules={[{ required: true, message: "Please enter the game title" }]}
           />
         </Row>
         <Row>
@@ -279,6 +294,7 @@ export default function Create() {
             style={style}
             ref={priceRef}
             onValueChange={(e) => setPrice(e.target.value)}
+            rules={[{ required: true, message: "Please enter the list price" }]}
           />
         </Row>
         <Row>
@@ -290,6 +306,7 @@ export default function Create() {
             style={style}
             ref={locationRef}
             onValueChange={(e) => setLocation(e.target.value)}
+            rules={[{ required: true, message: "Please select a location" }]}
           ></Form.Cascader>
         </Row>
         <Row>
@@ -300,6 +317,12 @@ export default function Create() {
             ref={descriptionRef}
             onValueChange={(e) => setDescription(e.target.value)}
             initValue="do Lorem velit elit consectetur minim dolor eiusmod reprehenderit laborum excepteur consectetur consequat qui occaecat sit commodo ex commodo exercitation cillum sunt mollit amet reprehenderit amet deserunt excepteur ullamco tempor exercitation Lorem nulla aliquip mollit consectetur ut eu anim exercitation quis voluptate eu laboris voluptate elit dolore culpa non occaecat"
+            rules={[
+              {
+                required: true,
+                message: "Please enter the description",
+              },
+            ]}
           />
         </Row>
         <Row>
@@ -317,17 +340,26 @@ export default function Create() {
           noLabel={true}
           ref={agreeRef}
           onValueChange={(e) => setAgree(e.target.checked)}
+          rules={[{ required: true, message: "Please agree to the terms" }]}
         >
           I agree to publicly list the item on the blockchain
         </Checkbox>
         <div style={{ marginTop: 10 }} />
-        <Button type="primary" htmlType="submit" className="btn-margin-right">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="btn-margin-right"
+          disabled={disableSubmit}
+          loading={loading}
+        >
           Submit
         </Button>
         <Button htmlType="reset">Reset</Button>
-        <div style={{ marginTop: 10 }}>
+        <div style={{ marginTop: 30 }}>
           {submittedMsg && (
-            <Paragraph type="tertiary">{submittedMsg}</Paragraph>
+            <Title heading={4} type="success">
+              {submittedMsg}
+            </Title>
           )}
         </div>
         <ComponentUsingFormState />
