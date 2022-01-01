@@ -38,24 +38,56 @@ export default function Listing() {
     );
     // call the contract function .fetchGameItems() from the DeGame_Listing smart contract
     const CoreTransaction = await CoreContract.fetchGameItems();
-    console.log(CoreTransaction.length); // number of game listings
-    console.log(BigNumber.from(CoreTransaction[0][0]).toString()); // GameID
-    console.log(CoreTransaction[0][1]); // nftContract address
-    console.log(BigNumber.from(CoreTransaction[0][2]).toString()); // tokenID
-    console.log(CoreTransaction[0][3]); // seller address
-    console.log(CoreTransaction[0][4]); // buyer address
-    console.log(BigNumber.from(CoreTransaction[0][5]).toString()); // price
-    // Define variables for the game listing details
-    // const numListing = CoreTransaction.length;
-    // const GameID = BigNumber.from(CoreTransaction[0][0]).toString();
-    // const nftContract = CoreTransaction[0][1];
-    const tokenID = BigNumber.from(CoreTransaction[0][2]).toString();
-    // const seller = CoreTransaction[0][3];
-    // const buyer = CoreTransaction[0][4];
-    // const price = BigNumber.from(CoreTransaction[0][5]).toString();
-    // get game item details from the smart contract
-    const getGameUri = await NFTcontract.getGameListingDetails(tokenID);
-    console.log(getGameUri);
+    // loop through the returned array of game listing hashes
+    for (let i = 0; i < CoreTransaction.length; i++) {
+      // get game nft contract address from the smart contract
+      const gameNFTtokenID = await BigNumber.from(
+        CoreTransaction[i][2]
+      ).toString();
+      // get nft details from the nft contract
+      const gameNFTdetails = await NFTcontract.getGameListingDetails(
+        gameNFTtokenID
+      );
+      // get game details from hasura database according to the metadata uri returned
+      var myHeaders = new Headers();
+      myHeaders.append("content-type", "application/json");
+      myHeaders.append(
+        "x-hasura-admin-secret",
+        process.env.REACT_APP_HASURA_GRAPHQL_ADMIN_SECRET
+      );
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+      const response = await fetch(
+        "https://degame-cat-2v0s2t.hasura.app/api/rest/get_game_details_by_metadata?_eq=" +
+          gameNFTdetails,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .catch((error) => console.log("error", error));
+      console.log(response);
+    }
+
+    // console.log(CoreTransaction.length); // number of game listings
+    // console.log(BigNumber.from(CoreTransaction[0][0]).toString()); // GameID
+    // console.log(CoreTransaction[0][1]); // nftContract address
+    // console.log(BigNumber.from(CoreTransaction[0][2]).toString()); // tokenID
+    // console.log(CoreTransaction[0][3]); // seller address
+    // console.log(CoreTransaction[0][4]); // buyer address
+    // console.log(BigNumber.from(CoreTransaction[0][5]).toString()); // price
+    // // Define variables for the game listing details
+    // // const numListing = CoreTransaction.length;
+    // // const GameID = BigNumber.from(CoreTransaction[0][0]).toString();
+    // // const nftContract = CoreTransaction[0][1];
+    // const tokenID = BigNumber.from(CoreTransaction[0][2]).toString();
+    // // const seller = CoreTransaction[0][3];
+    // // const buyer = CoreTransaction[0][4];
+    // // const price = BigNumber.from(CoreTransaction[0][5]).toString();
+    // // get game item details from the smart contract
+    // const getGameUri = await NFTcontract.getGameListingDetails(tokenID);
+    // console.log(getGameUri);
   }
 
   return (
